@@ -1,8 +1,15 @@
 from p1_support import load_level, show_level, save_level_costs
 from math import inf, sqrt
 from heapq import heappop, heappush
+#Auxiliar functions
+#We got the next function from: https://docs.python.org/2/library/heapq.html
+def heapsort(iterable):
+    h = []
+    for value in iterable:
+        heappush(h, value)
+    return [heappop(h) for i in range(len(h))]
 
-
+#Core functions
 def dijkstras_shortest_path(initial_position, destination, graph, adj):
     """ Searches for a minimal cost path through a graph using Dijkstra's algorithm.
 
@@ -17,6 +24,30 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
         Otherwise, return None.
 
     """
+    #Heap for the nodes we are going to expand
+    next_nodes_to_expand = []
+    #We push the initial node into the heap
+    heappush(next_nodes_to_expand, initial_position)
+    #dict for the cost of the nodes so far
+    costs = {(initial_position: 0)}
+    #dict for the parent of the nodes
+    parents = {}
+    #while loop
+    while(len(next_nodes_to_expand) != 0):
+        #We extract the ne
+        current_node = heappop(next_nodes_to_expand)
+        if(current_node == destination):
+            break
+        neighbours = navigation_edges(level, current_node)
+        for aux in neighbours:
+            pos, cost = aux
+            if(aux in next_nodes_to_expand):
+                if(costs[pos] > cost + parents[aux]):
+                    cost[pos] = cost + parents[aux]
+                    parents[pos] = current_node
+            else:
+            costs[pos] = cost + costs[parents[current_node]]
+            parents[pos] = current_node
     pass
 
 
@@ -51,7 +82,21 @@ def navigation_edges(level, cell):
              ((1,1), 1.4142135623730951),
              ... ]
     """
-    pass
+    neighbours = []
+    xcoor, ycoor = cell
+    for i in range(xcoor -1, xcoor +1):
+        for j in range(ycoor -1, y coor+1):
+            #We don't want to include the current node in the list of neighbours
+            if(i != xcoor or j != ycoor):
+
+                if(!((i,j) in level['walls']))
+                    distance = sqrt(abs(i-xcoor)+abs(j-ycoor))
+                    cost = level['spaces'][(i,j)]*(distance/2) + level['spaces'][cell]*(distance/2)
+                else:
+                    cost = inf
+                neighbours.append(((i,j),cost))
+
+    return neighbours
 
 
 def test_route(filename, src_waypoint, dst_waypoint):
