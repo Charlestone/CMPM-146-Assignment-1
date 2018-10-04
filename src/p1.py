@@ -1,6 +1,6 @@
 from p1_support import load_level, show_level, save_level_costs
 from math import inf, sqrt
-from heapq import heappop, heappush
+from heapq import heappop, heappush, heapify
 #Auxiliar functions
 #We got the next function from: https://docs.python.org/2/library/heapq.html
 def heapsort(iterable):
@@ -27,28 +27,42 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
     #Heap for the nodes we are going to expand
     next_nodes_to_expand = []
     #We push the initial node into the heap
-    heappush(next_nodes_to_expand, initial_position)
-    #dict for the cost of the nodes so far
-    costs = {(initial_position: 0)}
+    heappush(next_nodes_to_expand, (0, initial_position))
     #dict for the parent of the nodes
     parents = {}
+    #Variable to check wheter we have foun the solution or not
+    found = False
     #while loop
     while(len(next_nodes_to_expand) != 0):
         #We extract the ne
         current_node = heappop(next_nodes_to_expand)
-        if(current_node == destination):
+        currcost, currpos = current_node
+        if(currpos == destination):
+            found = True
             break
-        neighbours = navigation_edges(level, current_node)
+        neighbours = navigation_edges(graph, currpos)
         for aux in neighbours:
-            pos, cost = aux
+            auxcost, auxpos = aux
             if(aux in next_nodes_to_expand):
-                if(costs[pos] > cost + parents[aux]):
-                    cost[pos] = cost + parents[aux]
-                    parents[pos] = current_node
+                index = next_nodes_to_expand.index(aux)
+                cost, pos = next_nodes_to_expand[index]
+                parcost, parpos = next_nodes_to_expand[parents[aux]]
+                if( cost > auxcost + parcost):
+                    next_nodes_to_expand[index] = (auxcost + parcost, auxpos)
+                    heapify(next_nodes_to_expand)
+                    parents[auxpos] = current_node
             else:
-            costs[pos] = cost + costs[parents[current_node]]
-            parents[pos] = current_node
-    pass
+                heappush(next_nodes_to_expand, (auxcost + currcost, auxpos))
+                parents[auxpos] = current_node
+    if(found == true):
+        pathlist = []
+        while(currpos != initial_position):
+            pathlist.insert(0, current_node)
+            current_node = parents[currpos]
+            currcost, currpos = current_node
+        return pathlist
+    else:
+        return None
 
 
 def dijkstras_shortest_path_to_all(initial_position, graph, adj):
@@ -84,17 +98,17 @@ def navigation_edges(level, cell):
     """
     neighbours = []
     xcoor, ycoor = cell
-    for i in range(xcoor -1, xcoor +1):
-        for j in range(ycoor -1, y coor+1):
+    for i in range(xcoor -1, xcoor +2):
+        for j in range(ycoor -1, ycoor +2):
             #We don't want to include the current node in the list of neighbours
             if(i != xcoor or j != ycoor):
 
-                if(!((i,j) in level['walls']))
+                if(((i,j) in level['walls']) == False):
                     distance = sqrt(abs(i-xcoor)+abs(j-ycoor))
                     cost = level['spaces'][(i,j)]*(distance/2) + level['spaces'][cell]*(distance/2)
                 else:
                     cost = inf
-                neighbours.append(((i,j),cost))
+                neighbours.append((cost, (i,j)))
 
     return neighbours
 
