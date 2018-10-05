@@ -181,10 +181,10 @@ def cost_to_all_cells(filename, src_waypoint, output_filename):
 if __name__ == '__main__':
     filename1, src_waypoint1, dst_waypoint1 = 'example.txt', 'a','e'
     filename2, src_waypoint2, dst_waypoint2 = 'test_maze.txt', 'a','d'
-    filename3, src_waypoint3, dst_waypoint3 = 'my_maze.txt', 'a','e'
+    filename3, src_waypoint3, dst_waypoint3 = 'my_maze.txt', 'a','b'
     # Use this function call to find the route between two waypoints.
-    test_route(filename1, src_waypoint1, dst_waypoint1)
+    test_route(filename3, src_waypoint3, dst_waypoint3)
     #test_route(filename2, src_waypoint2, dst_waypoint2)
     #test_route(filename3, src_waypoint3, dst_waypoint3)
     # Use this function to calculate the cost to all reachable cells from an origin point.
-    cost_to_all_cells(filename1, src_waypoint1, 'my_maze_costs.csv')
+    cost_to_all_cells(filename3, src_waypoint3, 'my_maze_costs.csv')
