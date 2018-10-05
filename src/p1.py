@@ -1,13 +1,10 @@
 from p1_support import load_level, show_level, save_level_costs
 from math import inf, sqrt
 from heapq import heappop, heappush, heapify
-#Auxiliar functions
-#We got the next function from: https://docs.python.org/2/library/heapq.html
-def heapsort(iterable):
-    h = []
-    for value in iterable:
-        heappush(h, value)
-    return [heappop(h) for i in range(len(h))]
+
+
+#I worked with Carlos del Rey
+#I also used the wikipedia
 
 #Core functions
 def dijkstras_shortest_path(initial_position, destination, graph, adj):
@@ -24,45 +21,141 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
         Otherwise, return None.
 
     """
-    #Heap for the nodes we are going to expand
     next_nodes_to_expand = []
-    #We push the initial node into the heap
     heappush(next_nodes_to_expand, (0, initial_position))
-    #dict for the parent of the nodes
+
     parents = {}
-    #Variable to check wheter we have foun the solution or not
+    cost = {}
+
+    cost[initial_position] = 0
+
     found = False
-    #while loop
-    while(len(next_nodes_to_expand) != 0):
-        #We extract the ne
+
+    print(next_nodes_to_expand)
+    while(next_nodes_to_expand):
+        print('bish what')
         current_node = heappop(next_nodes_to_expand)
-        currcost, currpos = current_node
-        if(currpos == destination):
+
+        if(current_node[1] == destination):
             found = True
             break
-        neighbours = navigation_edges(graph, currpos)
-        for aux in neighbours:
-            auxcost, auxpos = aux
-            if(aux in next_nodes_to_expand):
-                index = next_nodes_to_expand.index(aux)
-                cost, pos = next_nodes_to_expand[index]
-                parcost, parpos = next_nodes_to_expand[parents[aux]]
-                if( cost > auxcost + parcost):
-                    next_nodes_to_expand[index] = (auxcost + parcost, auxpos)
-                    heapify(next_nodes_to_expand)
-                    parents[auxpos] = current_node
-            else:
-                heappush(next_nodes_to_expand, (auxcost + currcost, auxpos))
-                parents[auxpos] = current_node
-    if(found == true):
-        pathlist = []
-        while(currpos != initial_position):
-            pathlist.insert(0, current_node)
-            current_node = parents[currpos]
-            currcost, currpos = current_node
-        return pathlist
+
+        neighbours = navigation_edges(graph, current_node[1])
+        for node in neighbours:
+            if(node[1] == initial_position):
+                continue
+            #if they're already in heap
+            print('PRINTING PARENT')
+            print(parents)
+            print('PRINTING COST')
+            print(cost)       
+            if((node[1] not in cost) or ((node[0] + cost[parents[node[1]]])< cost[node[1]])):
+                cost[node[1]] = node[0]
+                parents[node[1]] = current_node[1]
+                heappush(next_nodes_to_expand, (cost[node[1]] + node[0], node[1]))
+
+    print(parents)
+
+    if(found == True):
+        path_list = []
+        while(current_node[1] != initial_position):
+            path_list.insert(0, current_node[1])
+            current_node = (1,parents[current_node[1]])
+
+        path_list.insert(0, initial_position)
+        print(path_list)
+        return path_list
     else:
-        return None
+        return None    
+
+    # #Heap for the nodes we are going to expand
+    #next_nodes_to_expand = []
+    # #We push the initial node into the heap
+    # heappush(next_nodes_to_expand, (0, initial_position))
+    # #dict for the parent of the nodes
+    # parents = {}
+    # #Variable to check wheter we have foun the solution or not
+    # found = False
+    # #while loop
+    # while(len(next_nodes_to_expand) != 0):
+    #     #We extract the ne
+    #     current_node = heappop(next_nodes_to_expand)
+    #     currcost, currpos = current_node
+    #     #print( currpos)
+    #     if(currpos == destination):
+    #         found = True
+    #         break
+    #     neighbours = navigation_edges(graph, currpos)
+    #     for aux in neighbours:
+    #         #cost and position of neighbor node
+    #         auxcost, auxpos = aux
+
+    #         #if node is inside the heap
+    #         if(aux in next_nodes_to_expand):
+    #             #NEW: if neighbour is parent, then skip
+    #             if(parents[auxpos][1] == initial_position):
+    #                 continue
+
+    #             # if(auxpos in parents == False):
+    #             #     heappush(next_nodes_to_expand, (auxcost, auxpos))
+    #             #     parents[auxpos] = current_node
+    #             #     continue
+    #             #print('this is aux')
+    #             #print(aux)
+    #             #get the node's index in the heap
+    #             index = next_nodes_to_expand.index(aux)
+
+    #             #get the cost and position of whatever's in the index from heap
+    #             cost, pos = next_nodes_to_expand[index]
+
+    #             #NEW: get the neighbor node's parent's index
+    #             #trying to access something that's not there anymore
+    #             #whenever we pop things off, we lose track of their costs
+    #             #print(parents)
+    #             # parent_index = next_nodes_to_expand.index(parents[auxpos])
+    #             # parcost, parpos = next_nodes_to_expand[parent_index]
+
+    #             #NEW: we don't need to access heap because parent dictionary
+    #             #stores the node's parent's cost and position anyways
+    #             parcost, parpos = parents[auxpos]
+    #             if( cost > auxcost + parcost):
+    #                 next_nodes_to_expand[index] = (auxcost + parcost, auxpos)
+    #                 heapify(next_nodes_to_expand)
+    #                 parents[auxpos] = current_node
+    #         else:
+    #             heappush(next_nodes_to_expand, (auxcost + currcost, auxpos))
+    #             #print((auxcost + currcost, auxpos))
+    #             parents[auxpos] = current_node
+
+
+    # if(found == True):
+    #     print(parents)
+    #     pathlist = []
+    #     start_position = currpos
+    #     counter = 0
+    #     while(start_position != initial_position):
+    #         pathlist.insert(0, start_position)
+    #         start_position = parents[start_position][1]
+    #         counter += 1
+    #         if(counter == 30):
+    #             print(pathlist)
+    #             break
+
+    #     # while(currpos != initial_position):
+    #     #     print('current position')
+    #     #     print(currpos)
+    #     #     print('initial_position')
+    #     #     print(initial_position)
+
+    #     #     #NEW:insert the position
+    #     #     pathlist.insert(0, currpos)
+    #     #     currpos = parents[currpos][1]
+            
+    #     # return pathlist
+    # else:
+    #     return None
+
+
 
 
 def dijkstras_shortest_path_to_all(initial_position, graph, adj):
@@ -169,4 +262,4 @@ if __name__ == '__main__':
     test_route(filename, src_waypoint, dst_waypoint)
 
     # Use this function to calculate the cost to all reachable cells from an origin point.
-    cost_to_all_cells(filename, src_waypoint, 'my_costs.csv')
+    #cost_to_all_cells(filename, src_waypoint, 'my_costs.csv')
