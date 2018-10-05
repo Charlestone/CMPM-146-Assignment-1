@@ -1,5 +1,5 @@
 # Support code for P1
-
+#Slightly modified by Jessie Aniguid (1538200) and Carles del Rey (1710268)
 from math import inf
 from csv import writer
 

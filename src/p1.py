@@ -3,8 +3,8 @@ from math import inf, sqrt
 from heapq import heappop, heappush, heapify
 
 
-#I worked with Carlos del Rey
-#I also used the wikipedia
+#Authors: Jessie Aniguid (1538200) and Carles del Rey (1710268)
+#We have used the wikipedia
 
 #Core functions
 def dijkstras_shortest_path(initial_position, destination, graph, adj):
@@ -118,7 +118,6 @@ def navigation_edges(level, cell):
                 continue
             #We don't want to include the current node in the list of neighbours
             if(i != xcoor or j != ycoor):
-
                 if(((i,j) in level['walls']) == False):
                     distance = sqrt(abs(i-xcoor)+abs(j-ycoor))
                     cost = level['spaces'][(i,j)]*(distance/2) + level['spaces'][cell]*(distance/2)
@@ -179,11 +178,11 @@ def cost_to_all_cells(filename, src_waypoint, output_filename):
 
 
 if __name__ == '__main__':
-    filename1, src_waypoint1, dst_waypoint1 = 'example.txt', 'a','e'
+    #filename1, src_waypoint1, dst_waypoint1 = 'example.txt', 'a','e'
     filename2, src_waypoint2, dst_waypoint2 = 'test_maze.txt', 'a','d'
     filename3, src_waypoint3, dst_waypoint3 = 'my_maze.txt', 'a','b'
     # Use this function call to find the route between two waypoints.
-    test_route(filename3, src_waypoint3, dst_waypoint3)
+    test_route(filename2, src_waypoint2, dst_waypoint2)
     #test_route(filename2, src_waypoint2, dst_waypoint2)
     #test_route(filename3, src_waypoint3, dst_waypoint3)
     # Use this function to calculate the cost to all reachable cells from an origin point.
