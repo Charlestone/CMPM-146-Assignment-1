@@ -1,0 +1,1 @@
+We have modified the function show level from the p1_support.py file so the user can choose between printing in command line or in a file. We know we have not been asked for this, but we believe that you should be able to see the whole cycle.
