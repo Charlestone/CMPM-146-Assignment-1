@@ -41,7 +41,7 @@ def load_level(filename):
     return level
 
 
-def show_level(level, path=[]):
+def show_level(level, fileprint, path=[]):
     """ Displays a level via a print statement.
 
     Args:
@@ -74,8 +74,12 @@ def show_level(level, path=[]):
                 chars.append(' ')
 
         chars.append('\n')
-
-    print(''.join(chars))
+    #We got the following lines from https://stackoverflow.com/questions/10445726/how-to-print-directly-to-a-text-file-in-both-python-2-x-and-3-x
+    if(fileprint == True):
+        f = open('test_maze_path.txt','w')
+        print(''.join(chars), file=f)
+    else:
+        print(''.join(chars))
 
 
 def save_level_costs(level, costs, filename='distance_map.csv'):
